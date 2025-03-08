@@ -10,6 +10,11 @@
 
 #include <stddef.h>
 
+#ifdef USE_THREADS
+#include <pthread.h>
+#include <semaphore.h>
+#endif
+
 /**
  * Dimensions of the problem space.
  * Defined by build process.
@@ -18,6 +23,10 @@
  */
 #ifndef SWARM_DIMENSIONS
 #error "SWARM_DIMENSIONS must be defined"
+#endif
+
+#ifdef USE_THREADS
+#define NUM_THREADS 16
 #endif
 
 /**
@@ -52,6 +61,12 @@ typedef struct _Particle_
  */
 typedef struct _Swarm_
 {
+#ifdef USE_THREADS
+	pthread_t       Threads[NUM_THREADS];
+	pthread_mutex_t Mutex;
+	size_t          NumDone;
+	sem_t           Semaphore;
+#endif
 	Swarm_RandomGenerator RandomGenerator;
 	size_t                NumParticles;
 	Particle*             Particles;

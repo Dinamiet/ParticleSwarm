@@ -1,8 +1,11 @@
-#include "swarm.h"
+#include "optimize.h"
+
 #include "particle.h"
+#include "swarm.h"
+
 #include <string.h>
 
-void Swarm_Optimize(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
+void Optimize_SingleThread(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
 {
 	for (size_t itt = 0; itt < maxIterations; itt++)
 	{
@@ -22,3 +25,19 @@ void Swarm_Optimize(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const 
 		}
 	}
 }
+
+#ifdef USE_THREADS
+
+void Optimize_MultiThreaded(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
+{
+	(void)swarm;
+	(void)evaluate;
+	(void)maxIterations;
+	(void)w;
+	(void)c1;
+	(void)c2;
+	/** TODO: Implement optimization using multiple threads. */
+	return;
+}
+
+#endif
