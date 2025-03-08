@@ -8,6 +8,8 @@ add_library(
 	${PROJECT_NAME}
 )
 
+SET(PARTICLE_SWARM_NUM_DIMENSIONS 1 CACHE STRING "Number of dimensions for the Particle Swarm Optimization algorithm")
+
 # Doxygen document generation
 find_package(Doxygen)
 if (DOXYGEN_FOUND AND NOT DOXYGEN_IN)
@@ -64,6 +66,12 @@ target_include_directories(
 	${PROJECT_NAME}
 	PUBLIC
 		include
+)
+
+target_compile_definitions(
+	${PROJECT_NAME}
+	PUBLIC
+		"SWARM_DIMENSIONS=${PARTICLE_SWARM_NUM_DIMENSIONS}"
 )
 
 file(GLOB_RECURSE INCLUDE_FILES CONFIGURE_DEPENDS "include/*.h")

@@ -5,7 +5,7 @@
 
 void Particle_Init(Particle* particle, const Swarm_RandomGenerator randomGenerator, const float lowerBound, const float upperBound)
 {
-	for (size_t i = 0; i < DIMENSIONS; i++)
+	for (size_t i = 0; i < SWARM_DIMENSIONS; i++)
 	{
 		particle->Position[i]     = randomGenerator(lowerBound, upperBound);
 		particle->Velocity[i]     = randomGenerator(-1, 1);
@@ -16,7 +16,7 @@ void Particle_Init(Particle* particle, const Swarm_RandomGenerator randomGenerat
 
 void Particle_Update(Particle* particle, const float* globalBestPosition, const Swarm_RandomGenerator randomGenerator, const float w, const float c1, const float c2)
 {
-	for (size_t i = 0; i < DIMENSIONS; i++)
+	for (size_t i = 0; i < SWARM_DIMENSIONS; i++)
 	{
 		float r1              = randomGenerator(0, 1);
 		float r2              = randomGenerator(0, 1);

@@ -10,7 +10,15 @@
 
 #include <stddef.h>
 
-#define DIMENSIONS 1
+/**
+ * Dimensions of the problem space.
+ * Defined by build process.
+ *
+ * Check CMake CACHE variable PARTICLE_SWARM_NUM_DIMENSIONS
+ */
+#ifndef SWARM_DIMENSIONS
+#error "SWARM_DIMENSIONS must be defined"
+#endif
 
 /**
  * Objective function template which will evaluate the current particle parameters.
@@ -34,9 +42,9 @@ typedef float (*Swarm_RandomGenerator)(const float min, const float max);
 typedef struct _Particle_
 {
 	float BestFitness;
-	float BestPosition[DIMENSIONS];
-	float Position[DIMENSIONS];
-	float Velocity[DIMENSIONS];
+	float BestPosition[SWARM_DIMENSIONS];
+	float Position[SWARM_DIMENSIONS];
+	float Velocity[SWARM_DIMENSIONS];
 } Particle;
 
 /**
@@ -48,7 +56,7 @@ typedef struct _Swarm_
 	size_t                NumParticles;
 	Particle*             Particles;
 	float                 GlobalBestFitness;
-	float                 GlobalBestPosition[DIMENSIONS];
+	float                 GlobalBestPosition[SWARM_DIMENSIONS];
 } Swarm;
 
 /**
