@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-void Particle_Init(Particle* particle, Swarm_RandomGenerator randomGenerator, float lowerBound, float upperBound)
+void Particle_Init(Particle* particle, const Swarm_RandomGenerator randomGenerator, const float lowerBound, const float upperBound)
 {
 	for (size_t i = 0; i < DIMENSIONS; i++)
 	{
@@ -14,7 +14,7 @@ void Particle_Init(Particle* particle, Swarm_RandomGenerator randomGenerator, fl
 	particle->BestFitness = -INFINITY;
 }
 
-void Particle_Update(Particle* particle, float* globalBestPosition, Swarm_RandomGenerator randomGenerator, float w, float c1, float c2)
+void Particle_Update(Particle* particle, const float* globalBestPosition, const Swarm_RandomGenerator randomGenerator, const float w, const float c1, const float c2)
 {
 	for (size_t i = 0; i < DIMENSIONS; i++)
 	{
@@ -28,7 +28,7 @@ void Particle_Update(Particle* particle, float* globalBestPosition, Swarm_Random
 	}
 }
 
-float Particle_Evaluate(Particle* particle, Swarm_ObjectiveFunction evaluate)
+float Particle_Evaluate(Particle* particle, const Swarm_ObjectiveFunction evaluate)
 {
 	float fitness = evaluate(particle->Position);
 	if (fitness > particle->BestFitness)

@@ -1,10 +1,11 @@
+#include "swarm.h"
+
 #include "particle.h"
-#include "particle_swarm.h"
 
 #include <math.h>
 #include <string.h>
 
-void Swarm_Init(Swarm* swarm, Particle* particles, size_t numParticles, Swarm_RandomGenerator randomGenerator, float lowerBound, float upperBound)
+void Swarm_Init(Swarm* swarm, Particle* particles, const size_t numParticles, const Swarm_RandomGenerator randomGenerator, const float lowerBound, const float upperBound)
 {
 	swarm->RandomGenerator   = randomGenerator;
 	swarm->NumParticles      = numParticles;
@@ -15,7 +16,7 @@ void Swarm_Init(Swarm* swarm, Particle* particles, size_t numParticles, Swarm_Ra
 	for (size_t i = 0; i < numParticles; ++i) { Particle_Init(&swarm->Particles[i], randomGenerator, lowerBound, upperBound); }
 }
 
-void Swarm_Optimize(Swarm* swarm, Swarm_ObjectiveFunction evaluate, size_t maxIterations, float w, float c1, float c2)
+void Swarm_Optimize(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
 {
 	for (size_t itt = 0; itt < maxIterations; itt++)
 	{
@@ -36,6 +37,6 @@ void Swarm_Optimize(Swarm* swarm, Swarm_ObjectiveFunction evaluate, size_t maxIt
 	}
 }
 
-float Swarm_GetBestFitness(Swarm* swarm) { return swarm->GlobalBestFitness; }
+float Swarm_GetBestFitness(const Swarm* swarm) { return swarm->GlobalBestFitness; }
 
 float* Swarm_GetBestPosition(Swarm* swarm) { return swarm->GlobalBestPosition; }
