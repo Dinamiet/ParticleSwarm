@@ -11,6 +11,7 @@
 
 typedef struct _ThreadInfo_
 {
+	bool                    Continue;
 	Swarm_ObjectiveFunction Evaluate;
 	Swarm*                  Swarm;
 	sem_t*                  StartSemaphore;
@@ -35,18 +36,21 @@ void* optimize_Thread(void* arg)
 {
 	ThreadInfo* info = (ThreadInfo*)arg;
 
-	while (sem_wait(info->StartSemaphore))
+	while (sem_wait(info->StartSemaphore) == 0 && info->Continue)
 	{
 		Particle* particle = getNextParticle(info);
-		float     fitness  = Particle_Evaluate(particle, info->Evaluate);
-		pthread_mutex_lock(info->Mutex);
-		if (fitness > info->Swarm->GlobalBestFitness)
+		if (particle)
 		{
-			info->Swarm->GlobalBestFitness = fitness;
-			memcpy(info->Swarm->GlobalBestPosition, particle->BestPosition, sizeof(info->Swarm->GlobalBestPosition));
+			float fitness = Particle_Evaluate(particle, info->Evaluate);
+			pthread_mutex_lock(info->Mutex);
+			if (fitness > info->Swarm->GlobalBestFitness)
+			{
+				info->Swarm->GlobalBestFitness = fitness;
+				memcpy(info->Swarm->GlobalBestPosition, particle->BestPosition, sizeof(info->Swarm->GlobalBestPosition));
+			}
+			pthread_mutex_unlock(info->Mutex);
+			sem_post(info->DoneSemaphore);
 		}
-		pthread_mutex_unlock(info->Mutex);
-		sem_post(info->DoneSemaphore);
 	}
 
 	return NULL;
@@ -67,6 +71,7 @@ void optimize_MultiThreaded(Swarm* swarm, const Swarm_ObjectiveFunction evaluate
 	info.DoneSemaphore     = &doneSemaphore;
 	info.NextParticleIndex = &nextParticleIndex;
 	info.Mutex             = &mutex;
+	info.Continue          = true;
 
 	// Setup
 	pthread_mutex_init(info.Mutex, NULL);
@@ -88,6 +93,8 @@ void optimize_MultiThreaded(Swarm* swarm, const Swarm_ObjectiveFunction evaluate
 	}
 
 	// Cleanup
+	info.Continue = false;
+	for (size_t i = 0; i < NUM_THREADS; i++) { sem_post(info.StartSemaphore); } // Unblock threads to exit
 	for (size_t i = 0; i < NUM_THREADS; i++) { pthread_join(threads[i], NULL); }
 	sem_destroy(info.DoneSemaphore);
 	sem_destroy(info.StartSemaphore);
