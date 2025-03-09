@@ -9,6 +9,7 @@ add_library(
 )
 
 SET(PARTICLE_SWARM_NUM_DIMENSIONS 1 CACHE STRING "Number of dimensions for the Particle Swarm Optimization algorithm")
+OPTION(USE_THREADS "Enable multithreading for the Particle Swarm Optimization algorithm" ON)
 
 # Doxygen document generation
 find_package(Doxygen)
@@ -73,6 +74,12 @@ target_compile_definitions(
 	PUBLIC
 		"SWARM_DIMENSIONS=${PARTICLE_SWARM_NUM_DIMENSIONS}"
 )
+
+if (USE_THREADS)
+	find_package(Threads REQUIRED)
+	target_compile_definitions(${PROJECT_NAME} PRIVATE USE_THREADS)
+	target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
+endif()
 
 file(GLOB_RECURSE INCLUDE_FILES CONFIGURE_DEPENDS "include/*.h")
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c")

@@ -10,6 +10,11 @@
 
 #include <stddef.h>
 
+#ifdef USE_THREADS
+#include <pthread.h>
+#include <semaphore.h>
+#endif
+
 /**
  * Dimensions of the problem space.
  * Defined by build process.
@@ -18,6 +23,10 @@
  */
 #ifndef SWARM_DIMENSIONS
 #error "SWARM_DIMENSIONS must be defined"
+#endif
+
+#ifdef USE_THREADS
+#define NUM_THREADS 16
 #endif
 
 /**
