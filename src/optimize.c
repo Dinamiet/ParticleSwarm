@@ -25,7 +25,7 @@ static Particle* getNextParticle(ThreadInfo* info)
 	pthread_mutex_lock(info->Mutex);
 
 	if (*info->NextParticleIndex < info->Swarm->NumParticles)
-		particle = &info->Swarm->Particles[*(info->NextParticleIndex)++];
+		particle = &info->Swarm->Particles[(*info->NextParticleIndex)++];
 
 	pthread_mutex_unlock(info->Mutex);
 	return particle;
