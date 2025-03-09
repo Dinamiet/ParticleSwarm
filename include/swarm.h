@@ -63,9 +63,10 @@ typedef struct _Swarm_
 {
 #ifdef USE_THREADS
 	pthread_t       Threads[NUM_THREADS];
+	sem_t           StartSemaphore;
+	sem_t           DoneSemaphore;
 	pthread_mutex_t Mutex;
-	size_t          NumDone;
-	sem_t           Semaphore;
+	size_t          NextParticleIndex;
 #endif
 	Swarm_RandomGenerator RandomGenerator;
 	size_t                NumParticles;
