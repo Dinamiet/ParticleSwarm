@@ -56,7 +56,14 @@ void* optimize_Thread(void* arg)
 	return NULL;
 }
 
-void optimize_MultiThreaded(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
+void optimize_MultiThreaded(
+		Swarm*                        swarm,
+		const Swarm_ObjectiveFunction evaluate,
+		const size_t                  maxIterations,
+		const float                   w,
+		const float                   c1,
+		const float                   c2,
+		const Swarm_ProgressReport    progress)
 {
 	pthread_t       threads[NUM_THREADS];
 	sem_t           startSemaphore;
@@ -90,6 +97,8 @@ void optimize_MultiThreaded(Swarm* swarm, const Swarm_ObjectiveFunction evaluate
 		{
 			Particle_Update(&swarm->Particles[i], swarm->GlobalBestPosition, swarm->RandomGenerator, w, c1, c2);
 		}
+		if (progress)
+			progress(itt + 1, swarm->GlobalBestFitness, swarm->GlobalBestPosition);
 	}
 
 	// Cleanup
@@ -103,7 +112,14 @@ void optimize_MultiThreaded(Swarm* swarm, const Swarm_ObjectiveFunction evaluate
 
 #else
 
-void optimize_SingleThread(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
+void optimize_SingleThread(
+		Swarm*                        swarm,
+		const Swarm_ObjectiveFunction evaluate,
+		const size_t                  maxIterations,
+		const float                   w,
+		const float                   c1,
+		const float                   c2,
+		const Swarm_ProgressReport    progress)
 {
 	for (size_t itt = 0; itt < maxIterations; itt++)
 	{
@@ -121,6 +137,9 @@ void optimize_SingleThread(Swarm* swarm, const Swarm_ObjectiveFunction evaluate,
 		{
 			Particle_Update(&swarm->Particles[i], swarm->GlobalBestPosition, swarm->RandomGenerator, w, c1, c2);
 		}
+
+		if (progress)
+			progress(itt + 1, swarm->GlobalBestFitness, swarm->GlobalBestPosition);
 	}
 }
 

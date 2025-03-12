@@ -17,12 +17,19 @@ void Swarm_Init(Swarm* swarm, Particle* particles, const size_t numParticles, co
 	for (size_t i = 0; i < numParticles; ++i) { Particle_Init(&swarm->Particles[i], randomGenerator, lowerBound, upperBound); }
 }
 
-void Swarm_Optimize(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2)
+void Swarm_Optimize(
+		Swarm*                        swarm,
+		const Swarm_ObjectiveFunction evaluate,
+		const size_t                  maxIterations,
+		const float                   w,
+		const float                   c1,
+		const float                   c2,
+		const Swarm_ProgressReport    progress)
 {
 #ifdef USE_THREADS
-	optimize_MultiThreaded(swarm, evaluate, maxIterations, w, c1, c2);
+	optimize_MultiThreaded(swarm, evaluate, maxIterations, w, c1, c2, progress);
 #else
-	optimize_SingleThread(swarm, evaluate, maxIterations, w, c1, c2);
+	optimize_SingleThread(swarm, evaluate, maxIterations, w, c1, c2, progress);
 #endif
 }
 

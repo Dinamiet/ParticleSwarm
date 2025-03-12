@@ -46,6 +46,14 @@ typedef float (*Swarm_ObjectiveFunction)(const float* parameters);
 typedef float (*Swarm_RandomGenerator)(const float min, const float max);
 
 /**
+ * Progress report callback template which will be called after each iteration when optimizing.
+ * \param itt The current iteration number.
+ * \param bestFitness The current best fitness found.
+ * \param bestParameters The current best parameters found.
+ */
+typedef void (*Swarm_ProgressReport)(const size_t itt, const float bestFitness, const float* bestParameters);
+
+/**
  * Particle information.
  */
 typedef struct _Particle_
@@ -93,8 +101,16 @@ void Swarm_Init(
  * \param w The inertia weight.
  * \param c1 The cognitive coefficient.
  * \param c2 The social coefficient.
+ * \param progress A callback function that will be called periodically during optimization. Can be NULL if no progress reporting is needed.
  */
-void Swarm_Optimize(Swarm* swarm, const Swarm_ObjectiveFunction evaluate, const size_t maxIterations, const float w, const float c1, const float c2);
+void Swarm_Optimize(
+		Swarm*                        swarm,
+		const Swarm_ObjectiveFunction evaluate,
+		const size_t                  maxIterations,
+		const float                   w,
+		const float                   c1,
+		const float                   c2,
+		const Swarm_ProgressReport    progress);
 
 /**
  * Returns the best fitness value found by the swarm.
