@@ -9,7 +9,7 @@ add_library(
 )
 
 SET(PARTICLE_SWARM_NUM_DIMENSIONS 1 CACHE STRING "Number of dimensions for the Particle Swarm Optimization algorithm")
-OPTION(USE_THREADS "Enable multithreading for the Particle Swarm Optimization algorithm" ON)
+SET(PARTICLE_SWARM_NUM_THREADS 1 CACHE STRING "Number of optimization threads to use")
 
 # Doxygen document generation
 find_package(Doxygen)
@@ -73,11 +73,12 @@ target_compile_definitions(
 	${PROJECT_NAME}
 	PUBLIC
 		"SWARM_DIMENSIONS=${PARTICLE_SWARM_NUM_DIMENSIONS}"
+	PRIVATE
+		"SWARM_THREADS=${PARTICLE_SWARM_NUM_THREADS}"
 )
 
-if (USE_THREADS)
+if (PARTICLE_SWARM_NUM_THREADS GREATER 1)
 	find_package(Threads REQUIRED)
-	target_compile_definitions(${PROJECT_NAME} PRIVATE USE_THREADS)
 	target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 endif()
 
