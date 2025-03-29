@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef USE_THREADS
+#if (SWARM_THREADS > 1)
 
 typedef struct _ThreadInfo_
 {
@@ -65,7 +65,7 @@ void optimize_MultiThreaded(
 		const float                   c2,
 		const Swarm_ProgressReport    progress)
 {
-	pthread_t       threads[NUM_THREADS];
+	pthread_t       threads[SWARM_THREADS];
 	sem_t           startSemaphore;
 	sem_t           doneSemaphore;
 	pthread_mutex_t mutex;
@@ -84,7 +84,7 @@ void optimize_MultiThreaded(
 	pthread_mutex_init(info.Mutex, NULL);
 	sem_init(info.StartSemaphore, 0, 0);
 	sem_init(info.DoneSemaphore, 0, 0);
-	for (size_t i = 0; i < NUM_THREADS; i++) { pthread_create(&threads[i], NULL, optimize_Thread, &info); }
+	for (size_t i = 0; i < SWARM_THREADS; i++) { pthread_create(&threads[i], NULL, optimize_Thread, &info); }
 
 	for (size_t itt = 0; itt < maxIterations; itt++)
 	{
@@ -103,8 +103,8 @@ void optimize_MultiThreaded(
 
 	// Cleanup
 	info.Continue = false;
-	for (size_t i = 0; i < NUM_THREADS; i++) { sem_post(info.StartSemaphore); } // Unblock threads to exit
-	for (size_t i = 0; i < NUM_THREADS; i++) { pthread_join(threads[i], NULL); }
+	for (size_t i = 0; i < SWARM_THREADS; i++) { sem_post(info.StartSemaphore); } // Unblock threads to exit
+	for (size_t i = 0; i < SWARM_THREADS; i++) { pthread_join(threads[i], NULL); }
 	sem_destroy(info.DoneSemaphore);
 	sem_destroy(info.StartSemaphore);
 	pthread_mutex_destroy(info.Mutex);

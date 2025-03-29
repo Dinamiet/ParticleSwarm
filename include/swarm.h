@@ -10,7 +10,7 @@
 
 #include <stddef.h>
 
-#ifdef USE_THREADS
+#if (SWARM_THREADS > 1)
 #include <pthread.h>
 #include <semaphore.h>
 #endif
@@ -23,10 +23,6 @@
  */
 #ifndef SWARM_DIMENSIONS
 #error "SWARM_DIMENSIONS must be defined"
-#endif
-
-#ifdef USE_THREADS
-#define NUM_THREADS 16
 #endif
 
 /**
