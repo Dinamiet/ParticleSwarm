@@ -26,7 +26,7 @@ void Swarm_Optimize(
 		const float                   c2,
 		const Swarm_ProgressReport    progress)
 {
-#ifdef USE_THREADS
+#if (SWARM_THREADS > 1)
 	optimize_MultiThreaded(swarm, evaluate, maxIterations, w, c1, c2, progress);
 #else
 	optimize_SingleThread(swarm, evaluate, maxIterations, w, c1, c2, progress);
