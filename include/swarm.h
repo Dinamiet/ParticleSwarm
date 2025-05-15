@@ -10,11 +10,6 @@
 
 #include <stddef.h>
 
-#if (SWARM_THREADS > 1)
-#include <pthread.h>
-#include <semaphore.h>
-#endif
-
 /**
  * Dimensions of the problem space.
  * Defined by build process.

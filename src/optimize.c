@@ -9,6 +9,9 @@
 
 #if (SWARM_THREADS > 1)
 
+#include <pthread.h>
+#include <semaphore.h>
+
 typedef struct _ThreadInfo_
 {
 	bool                    Continue;
